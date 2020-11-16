@@ -33,9 +33,16 @@ namespace Testing
             services.AddScoped<IBaseRepository<Bill>, BillRepository>();
             services.AddScoped<IBaseRepository<BillDetail>, BillDetailRepository>();
 
-            services.AddCors(c =>
+            services.AddCors(options =>
             {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+                options.AddDefaultPolicy(
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:8080")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                });
             });
         }
 
@@ -51,7 +58,7 @@ namespace Testing
 
             app.UseRouting();
 
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors();
 
             app.UseAuthorization();
 
